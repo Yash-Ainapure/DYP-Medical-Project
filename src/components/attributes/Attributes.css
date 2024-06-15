@@ -1,0 +1,22 @@
+.layoutInMega2{
+    margin-bottom: 20px;
+    width: 100%;
+}
+.bodyofNavbar{
+    margin-top:0;
+}
+.footer {
+    /* position: absolute; */
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    /* background-color: #0000FF; */
+    background-color:rgb(37, 150, 190);
+    height: 40px;
+    color: white;
+    text-align: center;
+    padding: 10px; 
+    
+ }
+ 
+

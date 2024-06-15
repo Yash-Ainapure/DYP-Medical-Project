@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { auth } from '../firebase';
+import { auth } from '../../firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
    const [isLoading, setLoading] = useState(false);
    const [text, setText] = useState({});
+   const navigate =useNavigate();
 
    const handleText = (e) => {
       e.preventDefault();
@@ -32,6 +34,7 @@ function Login() {
 
    const handleSuccess = () => {
       console.log("success...");
+      navigate('./dashboard')
    }
 
    return (

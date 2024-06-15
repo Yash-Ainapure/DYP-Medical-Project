@@ -1,0 +1,12 @@
+.alignFormInmiddle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Optional: Adjust the height as needed */
+}
+
+.formstudent {
+  background-color: #ffffff; /* Optional: Add a background color */
+  padding: 20px; /* Optional: Add some padding */
+  border-radius: 8px; /* Optional: Add border radius */
+}
