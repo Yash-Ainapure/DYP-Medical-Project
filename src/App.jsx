@@ -18,7 +18,6 @@ function App() {
   return (
     <div className="flex flex-col min-h-screen">
       <Router>
-        {/* <Navbar /> */}
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/registration" element={<Register />} />
