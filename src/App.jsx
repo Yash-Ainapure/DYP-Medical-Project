@@ -14,8 +14,18 @@ import Register from './components/attributes/Registration';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import DisplayBatches from './components/StudentDbCreation/DisplayBatches';
 import AddNewStudent from './components/StudentDbCreation/AddNewStudent';
+import { useState } from 'react';
+import DisplayStudentList from './components/StudentDbCreation/DisplayStudentList';
 
 function App() {
+
+  const [showStudentList, setShowStudentList] = useState(false);
+  const [selectedBatch, setSelectedBatch] = useState("");
+
+  const handleButtonClick = async (batchName) => {
+    setSelectedBatch(batchName);
+    setShowStudentList(true);
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -24,7 +34,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/registration" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/dashboard/displaybatches" element={<DisplayBatches />} />
+          <Route path="/dashboard/displaybatches" element={<DisplayBatches handleButtonClick={handleButtonClick} />} />
           <Route path="/dashboard/newstudent" element={<AddNewStudent />} />
           <Route path="/dashboard/studentdb" element={<StudentDBCreation />} />
           <Route path="/dashboard/markattendance" element={<MarkAttendance />} />
@@ -35,6 +45,9 @@ function App() {
           <Route path="/dashboard/megasheet2" element={<MegaSheetTwo />} />
           <Route path="/dashboard/workshopreport" element={<WorkshopReport />} />
         </Routes>
+        {showStudentList && (
+          <DisplayStudentList batchName={selectedBatch} onClose={() => setShowStudentList(false)} />
+        )}
         <Footer />
       </Router>
     </div>

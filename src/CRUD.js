@@ -1,4 +1,4 @@
-import { ref, push, set, onValue } from 'firebase/database';
+import { getDatabase, get, query, orderByChild, equalTo, ref, push, set, onValue } from 'firebase/database';
 import { ref as storageRef, uploadString, getDownloadURL } from 'firebase/storage';
 import { database, storage } from './firebase';
 
@@ -89,4 +89,32 @@ const fetchBatchNames = async () => {
 };
 
 
-export { setBatchData, getBatchesData, addnewStudent, fetchBatchNames }
+//fetch all students list according to thier batch as parameter
+const fetchStudentsByBatch = async (batchName) => {
+   const db = getDatabase();
+   const studentListRef = ref(db, 'studentlist');
+
+   const studentQuery = query(studentListRef, orderByChild('assignedBatch'), equalTo(batchName));
+
+   try {
+      const snapshot = await get(studentQuery);
+      if (snapshot.exists()) {
+         const students = [];
+         snapshot.forEach((childSnapshot) => {
+            students.push({ rollNo: childSnapshot.key, ...childSnapshot.val() });
+         });
+         return students;
+      } else {
+         console.log("No students found with assignedBatch:", batchName);
+         return [];
+      }
+   } catch (error) {
+      console.error("Error fetching students:", error);
+      return [];
+   }
+};
+
+
+
+
+export { setBatchData, getBatchesData, addnewStudent, fetchBatchNames, fetchStudentsByBatch }
