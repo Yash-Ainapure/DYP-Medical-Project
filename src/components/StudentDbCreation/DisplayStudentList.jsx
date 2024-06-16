@@ -73,8 +73,7 @@ const DisplayStudentList = ({ batchName, onClose }) => {
                            <td className="py-3 px-6 text-center">
                               <button onClick={(e) => {
                                  e.preventDefault();
-                                 console.log(e.currentTarget.value)
-                                 navigate('/editstudent', { state: { item: item } });
+                                 navigate('/dashboard/editstudent', { state: { item: item } });
                                  onClose();
                               }} value={item.rollNo}>
                                  <span className="cursor-pointer text-blue-500">

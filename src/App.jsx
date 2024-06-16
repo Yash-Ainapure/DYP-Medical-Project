@@ -17,10 +17,10 @@ import AddNewStudent from './components/StudentDbCreation/AddNewStudent';
 import { useState } from 'react';
 import DisplayStudentList from './components/StudentDbCreation/DisplayStudentList';
 import EditStudentInfo from './components/StudentDbCreation/EditStudentInfo';
-import { faL } from '@fortawesome/free-solid-svg-icons';
+import "./App.css";
+import Event from "./components/Events";
 
 function App() {
-
   const [showStudentList, setShowStudentList] = useState(false);
   const [selectedBatch, setSelectedBatch] = useState("");
 
@@ -35,27 +35,56 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/registration" element={<Register />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/dashboard/displaybatches" element={<DisplayBatches handleButtonClick={handleButtonClick} />} />
-          <Route path="/dashboard/newstudent" element={<AddNewStudent />} />
-          <Route path="/dashboard/studentdb" element={<StudentDBCreation />} />
-          <Route path="/editstudent" element={<EditStudentInfo onClose={()=>setShowStudentList(false)}/>} />
+          <Route path="/dashboard" element={<Dashboard />} errorElement={<div>page not found</div>}>
+            <Route
+              path="displaybatches"
+              element={<DisplayBatches handleButtonClick={handleButtonClick} />}
+            />
+            <Route path="newstudent" element={<AddNewStudent />} />
+            <Route path="editstudent" element={<EditStudentInfo onClose={() => setShowStudentList(false)} />} />
+            <Route
+              path="studentdb"
+              element={<StudentDBCreation />}
+            />
+            <Route
+              path="markattendance"
+              element={<MarkAttendance />}
+            />
+            <Route
+              path="groupcreation"
+              element={<GroupCreation />}
+            />
+            <Route
+              path="studentupdation"
+              element={<StudentUpdate />}
+            />
+            <Route
+              path="workshopdetail"
+              element={<WorkshopDetail />}
+            />
+            <Route path="megasheet1" element={<MegaSheetOne />} />
+            <Route path="megasheet2" element={<MegaSheetTwo />} />
+            <Route
+              path="workshopreport"
+              element={<WorkshopReport />}
+            />
+            <Route
+              path="event"
+              element={<Event />}
+            />
 
-          <Route path="/dashboard/markattendance" element={<MarkAttendance />} />
-          <Route path="/dashboard/groupcreation" element={<GroupCreation />} />
-          <Route path="/dashboard/studentupdation" element={<StudentUpdate />} />
-          <Route path="/dashboard/workshopdetail" element={<WorkshopDetail />} />
-          <Route path="/dashboard/megasheet1" element={<MegaSheetOne />} />
-          <Route path="/dashboard/megasheet2" element={<MegaSheetTwo />} />
-          <Route path="/dashboard/workshopreport" element={<WorkshopReport />} />
+          </Route>
         </Routes>
         {showStudentList && (
-          <DisplayStudentList batchName={selectedBatch} onClose={() => setShowStudentList(false)} />
+          <DisplayStudentList
+            batchName={selectedBatch}
+            onClose={() => setShowStudentList(false)}
+          />
         )}
         <Footer />
       </Router>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
