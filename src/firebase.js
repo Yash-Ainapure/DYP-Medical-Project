@@ -4,20 +4,19 @@ import { getAnalytics } from "firebase/analytics";
 import { getAuth, signOut } from 'firebase/auth';
 import { getDatabase } from 'firebase/database';
 import { getStorage } from 'firebase/storage';
-
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-   apiKey: "AIzaSyA7-JR3k4l6wQSheMByLD-jlEq8RbSjjvE",
-   authDomain: "dypmedicalproject.firebaseapp.com",
-   projectId: "dypmedicalproject",
-   storageBucket: "dypmedicalproject.appspot.com",
-   messagingSenderId: "329198635799",
-   appId: "1:329198635799:web:55db833f14dfb754de0552",
-   measurementId: "G-VPRJNHM512"
+   apiKey: import.meta.env.VITE_APP_API_KEY,
+   authDomain: import.meta.env.VITE_APP_AUTH_DOMAIN,
+   projectId: import.meta.env.VITE_APP_PROJECT_ID,
+   storageBucket: import.meta.env.VITE_APP_STORAGE_BUCKET,
+   messagingSenderId: import.meta.env.VITE_APP_MESSAGING_SENDER_ID,
+   appId: import.meta.env.VITE_APP_APP_ID,
+   measurementId: import.meta.env.VITE_APP_MEASUREMENT_ID
 };
 
 // Initialize Firebase
