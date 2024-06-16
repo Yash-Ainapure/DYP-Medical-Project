@@ -24,7 +24,9 @@ function Dashboard() {
     }
   }, [location])
 
-
+  useEffect(()=>{
+    setUsername(localStorage.getItem("dypuser"));
+  },[])
 
   const logout = () => {
     localStorage.removeItem("dypmeds");
