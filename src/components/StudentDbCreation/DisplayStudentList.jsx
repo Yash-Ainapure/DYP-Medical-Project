@@ -32,7 +32,17 @@ const DisplayStudentList = ({ batchName, onClose }) => {
    }, [batchName, onClose]);
 
    if (loading) {
-      return <div className="fixed inset-0 flex items-center justify-center bg-gray-100">Loading...</div>;
+      return <div className="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
+         <div className="bg-white p-4 rounded shadow-md w-full max-w-sm">
+            <div className="flex items-center justify-center mb-4">
+               <svg className="animate-spin h-8 w-8 mr-3 text-blue-500" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V2.83A9.93 9.93 0 004.17 11H2a10 10 0 0010 10c2.76 0 5.26-1.13 7.07-2.93l-1.42-1.42A7.96 7.96 0 0112 20a8 8 0 01-8-8z"></path>
+               </svg>
+               <span className="text-gray-700">Loading...</span>
+            </div>
+         </div>
+      </div>
    }
 
    return (

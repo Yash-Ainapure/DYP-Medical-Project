@@ -4,12 +4,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import NewStudentValidation from "../ValidationSchemas/AddNewStudentValidation";
 import { editStudent, fetchBatchNames } from "../../CRUD";
 
-const EditStudentInfo = () => {
+const EditStudentInfo = ({ onClose }) => {
    const location = useLocation();
    const { item } = location.state || {};
    const [loading, setLoading] = useState(false);
    const [batchNames, setBatchNames] = useState([]);
-   const navigate=useNavigate();
+   const navigate = useNavigate();
 
    useEffect(() => {
       fetchBatchNames()
@@ -58,128 +58,122 @@ const EditStudentInfo = () => {
       },
    });
    return (
-      <div className="bg-blue-500 min-h-screen flex items-center justify-center">
-         <form className="bg-white p-8 rounded shadow-md w-full max-w-lg">
-            <div className="mb-4 text-center">
-               <label htmlFor="batch" className="block text-gray-700 font-bold mb-2">Add new Student:</label>
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+         <form className="bg-white p-6 rounded shadow-md w-full max-w-lg relative" onSubmit={(e) => e.preventDefault()}>
+            <div className="mb-2 text-center">
+               <label htmlFor="batch" className="block text-gray-700 font-bold mb-1">Add new Student:</label>
             </div>
 
             <div>
-               <label htmlFor="academic-year" className="block text-gray-700 font-bold mb-2">First Name:</label>
+               <label htmlFor="firstName" className="block text-gray-700 font-bold mb-1">First Name:</label>
                <input
-                  id="batch"
+                  id="firstName"
                   type="text"
                   name="firstName"
-                  className="bg-blue-100 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="bg-blue-100 rounded w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   value={values.firstName}
                   onChange={handleChange}
                   onBlur={handleBlur}
                />
                {errors.firstName && touched.firstName ? (
                   <span className="errorMassage flex text-red-500">
-                     {errors.firstName.charAt(0).toUpperCase() +
-                        errors.firstName.slice(1)}
+                     {errors.firstName.charAt(0).toUpperCase() + errors.firstName.slice(1)}
                   </span>
                ) : null}
             </div>
             <div>
-               <label htmlFor="academic-year" className="block text-gray-700 font-bold mb-2">Last Name</label>
+               <label htmlFor="lastName" className="block text-gray-700 font-bold mb-1">Last Name</label>
                <input
-                  id="batch"
+                  id="lastName"
                   type="text"
                   name="lastName"
-                  className="bg-blue-100 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="bg-blue-100 rounded w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   value={values.lastName}
                   onChange={handleChange}
                   onBlur={handleBlur}
                />
                {errors.lastName && touched.lastName ? (
                   <span className="errorMassage flex text-red-500">
-                     {errors.lastName.charAt(0).toUpperCase() +
-                        errors.lastName.slice(1)}
+                     {errors.lastName.charAt(0).toUpperCase() + errors.lastName.slice(1)}
                   </span>
                ) : null}
             </div>
             <div>
-               <label htmlFor="academic-year" className="block text-gray-700 font-bold mb-2">Roll no.</label>
+               <label htmlFor="roll" className="block text-gray-700 font-bold mb-1">Roll no.</label>
                <input
-                  id="batch"
+                  id="roll"
                   type="text"
                   name="roll"
-                  className="bg-blue-100 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="bg-blue-100 rounded w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   value={values.roll}
                   onChange={handleChange}
                   onBlur={handleBlur}
                />
                {errors.roll && touched.roll ? (
                   <span className="errorMassage flex text-red-500">
-                     {errors.roll.charAt(0).toUpperCase() +
-                        errors.roll.slice(1)}
+                     {errors.roll.charAt(0).toUpperCase() + errors.roll.slice(1)}
                   </span>
                ) : null}
             </div>
             <div>
-               <label htmlFor="academic-year" className="block text-gray-700 font-bold mb-2">Email Address</label>
+               <label htmlFor="email" className="block text-gray-700 font-bold mb-1">Email Address</label>
                <input
-                  id="batch"
+                  id="email"
                   type="text"
                   name="email"
-                  className="bg-blue-100 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="bg-blue-100 rounded w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   value={values.email}
                   onChange={handleChange}
                   onBlur={handleBlur}
                />
                {errors.email && touched.email ? (
                   <span className="errorMassage flex text-red-500">
-                     {errors.email.charAt(0).toUpperCase() +
-                        errors.email.slice(1)}
+                     {errors.email.charAt(0).toUpperCase() + errors.email.slice(1)}
                   </span>
                ) : null}
             </div>
             <div>
-               <label htmlFor="academic-year" className="block text-gray-700 font-bold mb-2">Contact</label>
+               <label htmlFor="contact" className="block text-gray-700 font-bold mb-1">Contact</label>
                <input
-                  id="batch"
+                  id="contact"
                   type="text"
                   name="contact"
-                  className="bg-blue-100 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="bg-blue-100 rounded w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   value={values.contact}
                   onChange={handleChange}
                   onBlur={handleBlur}
                />
                {errors.contact && touched.contact ? (
                   <span className="errorMassage flex text-red-500">
-                     {errors.contact.charAt(0).toUpperCase() +
-                        errors.contact.slice(1)}
+                     {errors.contact.charAt(0).toUpperCase() + errors.contact.slice(1)}
                   </span>
                ) : null}
             </div>
             <div>
-               <label htmlFor="academic-year" className="block text-gray-700 font-bold mb-2">Role</label>
+               <label htmlFor="role" className="block text-gray-700 font-bold mb-1">Role</label>
                <input
-                  id="batch"
+                  id="role"
                   type="text"
                   name="role"
-                  className="bg-blue-100 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="bg-blue-100 rounded w-full py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   value={values.role}
                   onChange={handleChange}
                   onBlur={handleBlur}
                />
                {errors.role && touched.role ? (
                   <span className="errorMassage flex text-red-500">
-                     {errors.role.charAt(0).toUpperCase() +
-                        errors.role.slice(1)}
+                     {errors.role.charAt(0).toUpperCase() + errors.role.slice(1)}
                   </span>
                ) : null}
             </div>
             <div>
                <select
                   name="assignedBatch"
-                  className=" mt-6 block appearance-none w-full bg-blue-100 border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  className="mt-4 block appearance-none w-full bg-blue-100 border border-gray-300 text-gray-700 py-1 px-2 pr-4 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                   value={values.assignedBatch}
                   onChange={handleChange}
                   onBlur={handleBlur}>
-                  <option value={null}>select batch</option>
+                  <option value={null}>Select batch</option>
                   {batchNames.map((batchName, index) => (
                      <option key={index} value={batchName}>
                         {batchName}
@@ -188,22 +182,33 @@ const EditStudentInfo = () => {
                </select>
                {errors.assignedBatch && touched.assignedBatch ? (
                   <span className="errorMassage text-red-500">
-                     {errors.assignedBatch.charAt(0).toUpperCase() +
-                        errors.assignedBatch.slice(1)}
+                     {errors.assignedBatch.charAt(0).toUpperCase() + errors.assignedBatch.slice(1)}
                   </span>
                ) : null}
             </div>
             <div className="flex justify-center mt-4">
                <button
                   type="submit"
-                  className="bg-blue-100 text-gray-700 py-2 px-4 rounded mr-2 hover:bg-blue-200 focus:outline-none focus:shadow-outline" disabled={loading}
+                  className="bg-blue-100 text-gray-700 py-2 px-4 rounded mr-2 hover:bg-blue-200 focus:outline-none focus:shadow-outline"
+                  disabled={loading}
                   onClick={handleSubmit}
                >
                   {loading ? "Updating student..." : "Update student"}
                </button>
             </div>
+            <button
+               type="button"
+               className="absolute top-0 right-0 mt-2 mr-2 text-gray-500 hover:text-gray-700 text-3xl"
+               onClick={(e)=>{
+                  e.preventDefault();
+                  navigate(-1);
+               }}
+            >
+               &times;
+            </button>
          </form>
       </div>
+
    )
 }
 
