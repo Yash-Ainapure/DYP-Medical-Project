@@ -66,6 +66,7 @@ function Login() {
         const current = new Date();
         const future = new Date(current.getTime() + 40 * 60000);
         localStorage.setItem("dypmeds", future.toISOString());
+        localStorage.setItem("dypuser", text.username)
     
         console.log("success...\ntoken : ", future.toISOString());
         handleSuccess();
