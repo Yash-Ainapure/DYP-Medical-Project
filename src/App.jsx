@@ -13,6 +13,7 @@ import StudentDBCreation from './components/StudentDbCreation/StudentDBCreation'
 import Register from './components/attributes/Registration';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import DisplayBatches from './components/StudentDbCreation/DisplayBatches';
+import AddNewStudent from './components/StudentDbCreation/AddNewStudent';
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
           <Route path="/registration" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/displaybatches" element={<DisplayBatches />} />
+          <Route path="/dashboard/newstudent" element={<AddNewStudent />} />
           <Route path="/dashboard/studentdb" element={<StudentDBCreation />} />
           <Route path="/dashboard/markattendance" element={<MarkAttendance />} />
           <Route path="/dashboard/groupcreation" element={<GroupCreation />} />

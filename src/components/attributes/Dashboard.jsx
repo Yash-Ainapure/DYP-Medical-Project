@@ -5,6 +5,9 @@ function Dashboard() {
   return (
     <div>
         <button onClick={()=>{
+          navigate('./newstudent')
+        }}> Add new Student </button>
+        <button onClick={()=>{
           navigate('./displaybatches')
         }}> Display student batches </button>
         <button onClick={()=>{

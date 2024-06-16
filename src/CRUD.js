@@ -47,4 +47,46 @@ const getBatchesData = () => {
    });
 };
 
-export { setBatchData, getBatchesData }
+const addnewStudent = async (data) => {
+   const { roll, ...studentData } = data;
+   const studentRef = ref(database, `studentlist/${roll}`);
+
+   try {
+      await set(studentRef, studentData);
+      alert("added new student");
+   } catch (error) {
+      console.error('Error writing data to Firebase:', error);
+   }
+}
+
+//function used to retrive all batch names present in database
+const fetchBatchNames = async () => {
+   const batchesRef = ref(database, 'batches');
+   try {
+      const snapshot = await new Promise((resolve, reject) => {
+         onValue(batchesRef, (snapshot) => {
+            resolve(snapshot);
+         }, (error) => {
+            reject(error);
+         });
+      });
+      if (!snapshot.exists()) {
+         console.log("No data available");
+         return [];
+      }
+      const batchNames = [];
+      snapshot.forEach((childSnapshot) => {
+         const batchName = childSnapshot.val().batchName;
+         if (batchName) {
+            batchNames.push(batchName);
+         }
+      });
+      return batchNames;
+   } catch (error) {
+      console.error("Error reading from database:", error);
+      throw error;
+   }
+};
+
+
+export { setBatchData, getBatchesData, addnewStudent, fetchBatchNames }

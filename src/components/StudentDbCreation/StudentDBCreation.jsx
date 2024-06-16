@@ -48,9 +48,11 @@ const StudentDBCreation = () => {
       let value = { ...filteredFormValues, document: values.document.name };
       setBatchData(value, documentUrl).then(() => {
         setLoading(false);
+        resetForm();
         alert("batch created successfully");
       }).catch((error) => {
         console.log("error in saving data: " + error);
+        resetForm();
         setLoading(false);
       })
     },
