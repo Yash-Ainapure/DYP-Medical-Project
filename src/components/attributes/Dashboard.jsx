@@ -5,8 +5,11 @@ function Dashboard() {
   return (
     <div>
         <button onClick={()=>{
+          navigate('./displaybatches')
+        }}> Display student batches </button>
+        <button onClick={()=>{
           navigate('./studentdb')
-        }}> Create Student</button>
+        }}> Create Student batches </button>
         <button onClick={()=>{
           navigate('./markattendance')
         }}>Mark Attendance</button>

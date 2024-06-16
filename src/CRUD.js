@@ -1,4 +1,4 @@
-import { ref, push, set } from 'firebase/database';
+import { ref, push, set, onValue } from 'firebase/database';
 import { ref as storageRef, uploadString, getDownloadURL } from 'firebase/storage';
 import { database, storage } from './firebase';
 
@@ -23,4 +23,28 @@ const setBatchData = async (data, documentUrl) => {
    }
 }
 
-export { setBatchData }
+const getBatchesData = () => {
+   return new Promise((resolve, reject) => {
+      try {
+         const batchesRef = ref(database, 'batches');
+         onValue(batchesRef, (snapshot) => {
+            const batchesData = snapshot.val();
+            if (batchesData) {
+               const batchesList = Object.keys(batchesData).map((key) => ({
+                  id: key,
+                  ...batchesData[key],
+               }));
+               resolve(batchesList);
+            } else {
+               resolve(null);
+            }
+         }, (error) => {
+            reject(error);
+         });
+      } catch (error) {
+         reject(error);
+      }
+   });
+};
+
+export { setBatchData, getBatchesData }

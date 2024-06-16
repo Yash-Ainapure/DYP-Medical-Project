@@ -12,6 +12,7 @@ import WorkshopDetail from './components/WorkShopDetail/WorkshopDetail';
 import StudentDBCreation from './components/StudentDbCreation/StudentDBCreation';
 import Register from './components/attributes/Registration';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import DisplayBatches from './components/StudentDbCreation/DisplayBatches';
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/registration" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/displaybatches" element={<DisplayBatches />} />
           <Route path="/dashboard/studentdb" element={<StudentDBCreation />} />
           <Route path="/dashboard/markattendance" element={<MarkAttendance />} />
           <Route path="/dashboard/groupcreation" element={<GroupCreation />} />
