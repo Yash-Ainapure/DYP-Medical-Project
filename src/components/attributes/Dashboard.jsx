@@ -1,7 +1,21 @@
 import { useNavigate } from 'react-router-dom';
+import {useEffect} from 'react';
 function Dashboard() {
-
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("dypmeds");
+    const date = new Date();
+    if (token) {
+      const tokenDate = new Date(token);
+      const diff = Math.abs(date.getTime() - tokenDate.getTime());
+      if (diff > 0) {
+        // navigate("./dashboard");
+        return;
+      } 
+    }
+    navigate('/')
+  }, []);
   return (
     <div>
         <button onClick={()=>{
