@@ -16,6 +16,7 @@ import DisplayBatches from './components/StudentDbCreation/DisplayBatches';
 import AddNewStudent from './components/StudentDbCreation/AddNewStudent';
 import { useState } from 'react';
 import DisplayStudentList from './components/StudentDbCreation/DisplayStudentList';
+import EditStudentInfo from './components/StudentDbCreation/EditStudentInfo';
 
 function App() {
 
@@ -37,6 +38,8 @@ function App() {
           <Route path="/dashboard/displaybatches" element={<DisplayBatches handleButtonClick={handleButtonClick} />} />
           <Route path="/dashboard/newstudent" element={<AddNewStudent />} />
           <Route path="/dashboard/studentdb" element={<StudentDBCreation />} />
+          <Route path="/editstudent" element={<EditStudentInfo />} />
+
           <Route path="/dashboard/markattendance" element={<MarkAttendance />} />
           <Route path="/dashboard/groupcreation" element={<GroupCreation />} />
           <Route path="/dashboard/studentupdation" element={<StudentUpdate />} />

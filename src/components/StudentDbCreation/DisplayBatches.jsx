@@ -53,8 +53,6 @@ const DisplayBatches = ({ handleButtonClick }) => {
                      <p><strong>Document:</strong> <a href={batch.documentUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500">View Document</a></p>
                      <button onClick={async (e) => {
                         e.preventDefault();
-                        // const students = await fetchStudentsByBatch(batch.batchName);
-                        // console.log(students);
                         handleButtonClick(batch.batchName);
                      }} className=" mt-2 bg-blue-500 rounded-sm p-1 text-white">View Students</button>
                   </div>

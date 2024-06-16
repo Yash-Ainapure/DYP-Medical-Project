@@ -1,4 +1,4 @@
-import { getDatabase, get, query, orderByChild, equalTo, ref, push, set, onValue } from 'firebase/database';
+import { getDatabase, get, query, orderByChild, child, update, equalTo, ref, push, set, onValue } from 'firebase/database';
 import { ref as storageRef, uploadString, getDownloadURL } from 'firebase/storage';
 import { database, storage } from './firebase';
 
@@ -114,7 +114,25 @@ const fetchStudentsByBatch = async (batchName) => {
    }
 };
 
+const editStudent = async (data) => {
+   const { roll, ...newData } = data;
+   try {
+      const dbRef = ref(database);
+      const snapshot = await get(child(dbRef, `studentlist/${roll}`));
+
+      if (snapshot.exists()) {
+         await update(ref(database, `studentlist/${roll}`), newData);
+         console.log("Student data updated successfully");
+      } else {
+         console.log("No data available for the given roll number");
+      }
+   } catch (error) {
+      console.error("Error updating student data:", error);
+   }
+
+}
 
 
 
-export { setBatchData, getBatchesData, addnewStudent, fetchBatchNames, fetchStudentsByBatch }
+
+export { setBatchData, getBatchesData, addnewStudent, fetchBatchNames, fetchStudentsByBatch, editStudent }

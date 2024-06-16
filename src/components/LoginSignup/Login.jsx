@@ -36,7 +36,7 @@ function Login() {
     }else{
       console.log("no token found!!", token);
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(()=>{
     if(failedLogin===true){
