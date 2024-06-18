@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import NewStudentValidation from "../ValidationSchemas/AddNewStudentValidation";
-import { editStudent, fetchBatchNames } from "../../CRUD";
+import { deleteStudent, editStudent, fetchBatchNames } from "../../CRUD";
 
 const EditStudentInfo = ({ onClose }) => {
    const location = useLocation();
@@ -57,6 +57,21 @@ const EditStudentInfo = ({ onClose }) => {
 
       },
    });
+
+   const handleDelete = () => {
+      // Assuming you have a function to delete a student by ID
+      setLoading(true);
+      deleteStudent(item) // replace `item.id` with the appropriate identifier
+         .then(() => {
+            alert('Student deleted successfully');
+            navigate(-1); // Redirect after deletion
+         })
+         .catch(error => {
+            console.error('Failed to delete student:', error);
+            setLoading(false);
+         });
+   };
+
    return (
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
          <form className="bg-white p-6 rounded shadow-md w-full max-w-lg relative" onSubmit={(e) => e.preventDefault()}>
@@ -186,20 +201,36 @@ const EditStudentInfo = ({ onClose }) => {
                   </span>
                ) : null}
             </div>
-            <div className="flex justify-center mt-4">
-               <button
-                  type="submit"
-                  className="bg-blue-100 text-gray-700 py-2 px-4 rounded mr-2 hover:bg-blue-200 focus:outline-none focus:shadow-outline"
-                  disabled={loading}
-                  onClick={handleSubmit}
-               >
-                  {loading ? "Updating student..." : "Update student"}
-               </button>
+            <div className="flex justify-center">
+               <div className="flex justify-center mt-4">
+                  <button
+                     type="submit"
+                     className="bg-blue-100 text-gray-700 py-2 px-4 rounded mr-2 hover:bg-blue-200 focus:outline-none focus:shadow-outline"
+                     disabled={loading}
+                     onClick={handleSubmit}
+                  >
+                     {loading ? "Updating student..." : "Update student"}
+                  </button>
+               </div>
+               <div className="flex justify-center mt-4">
+                  <button
+                     type="submit"
+                     className="bg-red-500 text-white py-2 px-4 rounded mr-2 hover:bg-blue-200 hover:text-black focus:outline-none focus:shadow-outline"
+                     disabled={loading}
+                     onClick={() => {
+                        if (window.confirm('Are you sure you want to delete this student?')) {
+                           handleDelete(values.roll);
+                        }
+                     }}
+                  >
+                     {loading ? "Deleting student..." : "Delete student"}
+                  </button>
+               </div>
             </div>
             <button
                type="button"
                className="absolute top-0 right-0 mt-2 mr-2 text-gray-500 hover:text-gray-700 text-3xl"
-               onClick={(e)=>{
+               onClick={(e) => {
                   e.preventDefault();
                   navigate(-1);
                }}

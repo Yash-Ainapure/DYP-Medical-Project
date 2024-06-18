@@ -132,7 +132,16 @@ const editStudent = async (data) => {
 
 }
 
+const deleteStudent = async (data) => {
+   console.log("Roll no: ", data.rollNo);
+   const studentRef = ref(database, `studentlist/${data.rollNo}`);
+   try {
+      await set(studentRef, null); // This will delete the student data
+      console.log("Student deleted successfully");
+   } catch (error) {
+      console.error("Error deleting student:", error);
+      throw error; // Rethrow to handle it in the calling function
+   }
+};
 
-
-
-export { setBatchData, getBatchesData, addnewStudent, fetchBatchNames, fetchStudentsByBatch, editStudent }
+export { setBatchData, getBatchesData, addnewStudent, fetchBatchNames, fetchStudentsByBatch, editStudent, deleteStudent }
