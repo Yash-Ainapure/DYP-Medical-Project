@@ -22,8 +22,8 @@ module.exports = {
       },
       animation: {
         'slide-in': 'slide-in 0.5s cubic-bezier(.5,1.5,.5,1)',
-        'slide-left': 'slide-left 0.5s cubic-bezier(.5,1.5,.5,1)',
-        'slide-right': 'slide-right 0.5s cubic-bezier(.5,1.5,.5,1)',
+        'slide-left': 'slide-left 0.5s ease-in',
+        'slide-right': 'slide-right 0.5s ease-in',
       },
     },
   },
