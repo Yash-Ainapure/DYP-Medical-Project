@@ -1,12 +1,20 @@
 import { getDatabase, get, query, orderByChild, child, update, equalTo, ref, push, set, onValue } from 'firebase/database';
-import { ref as storageRef, uploadString, getDownloadURL } from 'firebase/storage';
+import { ref as storageRef, uploadString, getDownloadURL, uploadBytes } from 'firebase/storage';
 import { database, storage } from './firebase';
 
-const setBatchData = async (data, documentUrl) => {
+const setBatchData = async (data, file, arrayBuffer) => {
    try {
+
+      if (!file || !arrayBuffer) {
+         console.error("File or array buffer is missing.");
+         return;
+      }
+
       // Upload the image to Firebase Storage
-      const docRef = storageRef(storage, `documents/${data.batchName}`);
-      await uploadString(docRef, documentUrl, 'data_url');
+      const docRef = storageRef(storage, `documents/${data.batchName}/${file.name}`);
+      await uploadBytes(docRef, file);
+
+      // await uploadString(docRef, documentUrl, 'data_url');
 
       // Get the download URL
       const downloadURL = await getDownloadURL(docRef);
@@ -144,4 +152,24 @@ const deleteStudent = async (data) => {
    }
 };
 
-export { setBatchData, getBatchesData, addnewStudent, fetchBatchNames, fetchStudentsByBatch, editStudent, deleteStudent }
+const processData = (data, assignedBatch) => {
+   const headers = data[0];
+   const rows = data.slice(1);
+   rows.forEach(row => {
+      const student = {};
+      headers.forEach((header, index) => {
+         student[header] = row[index];
+      });
+      student.assignedBatch = assignedBatch; // Add assignedBatch to each student
+      const studentRef = ref(database, 'studentlist/' + student.RollNo);
+      set(studentRef, student)
+         .then(() => {
+            console.log('Data uploaded successfully:', student);
+         })
+         .catch((error) => {
+            console.error('Error uploading data:', error);
+         });
+   });
+};
+
+export { setBatchData, getBatchesData, addnewStudent, fetchBatchNames, fetchStudentsByBatch, editStudent, deleteStudent, processData }

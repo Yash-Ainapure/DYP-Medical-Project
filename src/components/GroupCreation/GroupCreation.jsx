@@ -63,9 +63,9 @@ const WorkshopGroupCreation = () => {
     setBatchLimits({ ...batchLimits, [batch]: parseInt(value, 10) });
   };
 
-  const handleAddStudent = (student) => {
-    setStudents([...students, student]);
-  };
+  // const handleAddStudent = (student) => {
+  //   setStudents([...students, student]);
+  // };
 
   const handleRemoveStudent = (student) => {
     setStudents(students.filter(s => s !== student));

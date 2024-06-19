@@ -4,13 +4,35 @@ import { useFormik } from 'formik';
 import FilePreview from '../SubComponenets/FilePreview'
 import StudentDBCreationValidation from '../ValidationSchemas/StudentDBCreeationValidation'
 import { useRef, useState } from 'react';
-import { setBatchData } from '../../CRUD';
+import * as XLSX from 'xlsx';
+import { processData, setBatchData } from '../../CRUD';
 
 const StudentDBCreation = () => {
   const navigate = useNavigate();
   const documentRef = useRef();
   const [documentUrl, setDocumentUrl] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [dataFile, setDataFile] = useState();
+  const [arrayBuffer, setArrayBuffer] = useState(null);
+
+
+  const uploadData = (file, batchName) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+      processData(json, batchName);
+    };
+    reader.onerror = (error) => {
+      console.error('FileReader error:', error);
+    };
+    reader.readAsArrayBuffer(file);
+  };
+
+
   const formValues = {
     batchName: "",
     speciality: "",
@@ -19,7 +41,6 @@ const StudentDBCreation = () => {
     documentUrl: null,
     document: null,
   };
-
   const {
     values,
     errors,
@@ -34,6 +55,12 @@ const StudentDBCreation = () => {
     validationSchema: StudentDBCreationValidation,
     onSubmit: (values) => {
       setLoading(true);
+      console.log("called it success");
+
+      //upload excel student data in db
+      uploadData(dataFile, values.batchName);
+
+
       let documentUrl = "";
       //removed document url form the object
       const filteredFormValues = Object.keys(values).reduce((acc, key) => {
@@ -46,7 +73,7 @@ const StudentDBCreation = () => {
       }, {});
       //updating the document to only its name
       let value = { ...filteredFormValues, document: values.document.name };
-      setBatchData(value, documentUrl).then(() => {
+      setBatchData(value, dataFile,arrayBuffer).then(() => {
         setLoading(false);
         resetForm();
         alert("batch created successfully");
@@ -153,16 +180,28 @@ const StudentDBCreation = () => {
               ref={documentRef}
               hidden
               type="file"
+              accept=".xlsx, .xls"
               onChange={(event) => {
                 handleChange(event);
                 const file = event.target.files[0];
+                setDataFile(file);
+
                 setFieldValue("document", file);
                 const reader = new FileReader();
-                reader.readAsDataURL(file);
+
+                reader.readAsArrayBuffer(file);
                 reader.onload = () => {
-                  setDocumentUrl(reader.result);
+                  setArrayBuffer(reader.result);
+                  setFieldValue("document", file);
                   setFieldValue("documentUrl", reader.result);
                 };
+
+
+                // reader.readAsDataURL(file);
+                // reader.onload = () => {
+                //   setDocumentUrl(reader.result);
+                //   setFieldValue("documentUrl", reader.result);
+                // };
               }}
               name='documentUrl'
             />
@@ -184,6 +223,10 @@ const StudentDBCreation = () => {
                 errors.documentUrl.slice(1)}
             </span>
           ) : null}
+        </div>
+        <div>
+          <p className='mt-6 text-red-500'>The xml file updates the students accordingly so upload it as per the below format</p>
+          <a href="https://firebasestorage.googleapis.com/v0/b/dypmedicalproject.appspot.com/o/documents%2FdemoFile.xlsx?alt=media&token=4a00ebe9-1a5c-4c05-b8fa-af33c3a309d4">Download File</a>
         </div>
 
         <div className="flex justify-center mt-4">
