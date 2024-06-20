@@ -195,7 +195,7 @@ function Dashboard() {
         )}
         {/* here options code is done... */}
 
-        <div className="content w-full h-full -z-10">
+        <div className="content w-full h-full">
           {showIntro ? <div>hello, this is dashboard</div> : <Outlet />}
         </div>
       </div>
