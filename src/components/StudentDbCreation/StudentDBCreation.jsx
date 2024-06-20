@@ -55,11 +55,8 @@ const StudentDBCreation = () => {
     validationSchema: StudentDBCreationValidation,
     onSubmit: (values) => {
       setLoading(true);
-      console.log("called it success");
-
       //upload excel student data in db
       uploadData(dataFile, values.batchName);
-
 
       let documentUrl = "";
       //removed document url form the object

@@ -152,7 +152,7 @@ function Dashboard() {
                       </div>
                     </div>
                   </NavLink>
-                  <NavLink to="megasheet">
+                  <NavLink to="megasheet1">
                     <div className="flex flex-col align-top text-white ml-7 bg-blue-100 bg-opacity-20 hover:bg-opacity-30 transition-colors duration-200 rounded-xl p-2 ">
                       <div className="cursor-pointer my-2 font-medium">
                         <u> Mega Sheet Entry</u>
