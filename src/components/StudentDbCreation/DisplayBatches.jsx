@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { fetchStudentsByBatch, getBatchesData } from "../../CRUD";
 import { useNavigate } from "react-router-dom";
-
+import Auth from "../../Auth";
 const DisplayBatches = ({ handleButtonClick }) => {
    const [batches, setBatches] = useState([]);
    const navigate = useNavigate();
-
+   useEffect(() => {
+      if(!Auth())navigate("/")
+    },[])
    useEffect(() => {
       const fetchBatches = async () => {
 

@@ -3,9 +3,13 @@ import NewStudentValidation from "../ValidationSchemas/AddNewStudentValidation";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { addnewStudent, fetchBatchNames } from "../../CRUD";
-
+import { addRollList } from "../../CRUD2";
+import Auth from "../../Auth";
 const AddNewStudent = () => {
-   const navigate = useNavigate();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if(!Auth())navigate("/")
+  },[])
    const [loading, setLoading] = useState(false);
    const [batchNames, setBatchNames] = useState([]);
 
@@ -39,11 +43,10 @@ const AddNewStudent = () => {
       handleChange,
       handleBlur,
       resetForm,
-      setFieldValue,
    } = useFormik({
       initialValues: formValues,
       validationSchema: NewStudentValidation,
-      onSubmit: (values) => {
+      onSubmit:async (values) => {
          setLoading(true);
          addnewStudent(values).then(() => {
             setLoading(false);

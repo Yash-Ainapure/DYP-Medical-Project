@@ -3,14 +3,17 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import NewStudentValidation from "../ValidationSchemas/AddNewStudentValidation";
 import { deleteStudent, editStudent, fetchBatchNames } from "../../CRUD";
-
+import Auth from "../../Auth";
 const EditStudentInfo = ({ onClose }) => {
+   
    const location = useLocation();
    const { item } = location.state || {};
    const [loading, setLoading] = useState(false);
    const [batchNames, setBatchNames] = useState([]);
    const navigate = useNavigate();
-
+   useEffect(() => {
+      if(!Auth())navigate("/")
+    },[])
    useEffect(() => {
       fetchBatchNames()
          .then((batchNames) => {

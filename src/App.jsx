@@ -10,6 +10,7 @@ import Dashboard from './components/attributes/Dashboard';
 import StudentUpdate from './components/StudentDbCreation/studentupdation'
 import WorkshopDetail from './components/WorkShopDetail/WorkshopDetail';
 import StudentDBCreation from './components/StudentDbCreation/StudentDBCreation';
+import StudentDBCreation2 from './components/StudentDbCreation/StudentDBCreation2';
 import Register from './components/attributes/Registration';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import DisplayBatches from './components/StudentDbCreation/DisplayBatches';
@@ -41,10 +42,11 @@ function App() {
               element={<DisplayBatches handleButtonClick={handleButtonClick} />}
             />
             <Route path="newstudent" element={<AddNewStudent />} />
+            <Route path="studentdb2" element={<StudentDBCreation2 />} />
             <Route path="editstudent" element={<EditStudentInfo onClose={() => setShowStudentList(false)} />} />
             <Route
               path="studentdb"
-              element={<StudentDBCreation />}
+              element={<StudentDBCreation2 />}
             />
             <Route
               path="markattendance"

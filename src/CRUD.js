@@ -60,6 +60,7 @@ const addnewStudent = async (data) => {
    const studentRef = ref(database, `studentlist/${roll}`);
 
    try {
+      await addRollList(data.assignedBatch,roll)
       await set(studentRef, studentData);
       alert("added new student");
    } catch (error) {
@@ -142,6 +143,7 @@ const editStudent = async (data) => {
 
 const deleteStudent = async (data) => {
    console.log("Roll no: ", data.rollNo);
+   await deleteRollList(data.assignedBatch,data.rollNo)
    const studentRef = ref(database, `studentlist/${data.rollNo}`);
    try {
       await set(studentRef, null); // This will delete the student data
@@ -172,4 +174,50 @@ const processData = (data, assignedBatch) => {
    });
 };
 
+async function deleteRollList(batchName,roll){
+   const db = getDatabase();
+   const batchQuery = query(ref(db, 'batches'), orderByChild('batchName'), equalTo(batchName));
+   const snapshot = await get(batchQuery);
+   if (snapshot.exists()) {
+      const batchId = Object.keys(snapshot.val())[0];
+      
+      let rollList= snapshot.val()[batchId].rollList;
+      rollList.pop(roll)
+      setRollList(batchName,rollList)
+   } else {
+      console.log("No batch found with that name");
+      return [];
+   }
+}
+
+async function setRollList(batchName, rollList){
+   const db = getDatabase();
+   const batchQuery = query(ref(db, 'batches'), orderByChild('batchName'), equalTo(batchName));
+   const snapshot = await get(batchQuery);
+   if (snapshot.exists()) {
+      const batchId = Object.keys(snapshot.val())[0];
+      const batchRef = ref(db, `batches/${batchId}`);
+      await update(batchRef, { rollList });
+      console.log("Roll list updated successfully");
+   } else {
+      console.log("No batch found with that name");
+   }
+}
+
+
+async function addRollList(batchName,roll){
+   const db = getDatabase();
+   const batchQuery = query(ref(db, 'batches'), orderByChild('batchName'), equalTo(batchName));
+   const snapshot = await get(batchQuery);
+   if (snapshot.exists()) {
+      const batchId = Object.keys(snapshot.val())[0];
+      
+      let rollList= snapshot.val()[batchId].rollList;
+      rollList.push(roll)
+      setRollList(batchName,rollList)
+   } else {
+      console.log("No batch found with that name");
+      return [];
+   }
+}
 export { setBatchData, getBatchesData, addnewStudent, fetchBatchNames, fetchStudentsByBatch, editStudent, deleteStudent, processData }

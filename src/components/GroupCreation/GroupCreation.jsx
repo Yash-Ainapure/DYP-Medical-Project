@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { getBatchesData, fetchStudentsByBatch } from "../../CRUD";
-
+import Auth from "../../Auth";
+import { useNavigate } from "react-router-dom";
 const WorkshopGroupCreation = () => {
   const [workshopName, setWorkshopName] = useState("");
   const [workshopDate, setWorkshopDate] = useState("");
@@ -11,7 +12,10 @@ const WorkshopGroupCreation = () => {
   const [batchLimits, setBatchLimits] = useState({});
   const [students, setStudents] = useState([]);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
-
+  const navigate = useNavigate();
+  useEffect(() => {
+    if(!Auth())navigate("/")
+  },[])
   useEffect(() => {
     const fetchBatches = async () => {
       const batches = await getBatchesData();

@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { fetchStudentsByBatch } from "../../CRUD";
 import { useNavigate } from "react-router-dom";
-
+import Auth from "../../Auth";
 const DisplayStudentList = ({ batchName, onClose }) => {
    const [students, setStudents] = useState([]);
    const [loading, setLoading] = useState(true);
    const navigate = useNavigate();
+   useEffect(() => {
+      if(!Auth())navigate("/")
+    },[])
    useEffect(() => {
       let isMounted = true;
 

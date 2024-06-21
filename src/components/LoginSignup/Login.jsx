@@ -25,9 +25,8 @@ function Login() {
     const token = localStorage.getItem("dypmeds");
     const date = new Date();
     if (token) {
-      // const tokenDate = new Date(token);
       const diff = token-date.getTime()
-      console.log(token, date.toISOString(), diff)
+      // console.log(token, date.toISOString(), diff)
       if (diff > 0) {
         navigate("./dashboard");
       } else {
@@ -57,15 +56,12 @@ function Login() {
       setfailedLogin(true);
       return;
     }
-
-
-    // console.log("Matches:", result);
     e.preventDefault();
     setLoading(true);
     signInWithEmailAndPassword(auth, text.username, text.password)
       .then(() => {
         const current = new Date();
-        const future = new Date(current.getTime() + 15 * 60000);
+        const future = new Date(current.getTime() + 30 * 60000);
         localStorage.setItem("dypmeds", future.getTime());
         localStorage.setItem("dypuser", text.username)
 

@@ -6,8 +6,12 @@ import { Person, Menu, Logout } from "@mui/icons-material";
 import { Outlet } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
+import Auth from "../../Auth";
 function Dashboard() {
   const navigate = useNavigate();
+  useEffect(() => {
+    if(!Auth())navigate("/")
+  },[])
   const [username, setUsername] = useState("");
   const [tmp, setTmp] = useState(false);
   const [showStudentDB, setShowStuDB] = useState(false);
@@ -19,8 +23,8 @@ function Dashboard() {
   const [modal, setModal] = useState(false);
   const location = useLocation();
   useEffect(() => {
-    const str = location.pathname.replace("/dashboard/", "");
-    if (str.length > 0) {
+    const str = location.pathname.replace("/dashboard", "");
+    if (str.length > 1) {
       setShowIntro(false);
     }
   }, [location]);
@@ -42,9 +46,6 @@ function Dashboard() {
   return (
     <div
       className="h-screen w-full"
-      // style={
-      //   {background:'linear-gradient(45deg, #2193b0, #6dd5ed)'}
-      // }
     >
       {modal && <Modal navigate={navigate} cancleEvent={closeModal} />}
       <div className="dashboard h-full w-full flex justify-between">
@@ -195,7 +196,7 @@ function Dashboard() {
         )}
         {/* here options code is done... */}
 
-        <div className="content w-full h-full">
+        <div className="content w-full h-full overflow-scroll">
           {showIntro ? <div>hello, this is dashboard</div> : <Outlet />}
         </div>
       </div>
@@ -204,7 +205,7 @@ function Dashboard() {
 }
 function Modal({ navigate, cancleEvent }) {
   return (
-    <div className="absolute w-full h-full top-0 left-0 flex justify-center items-center">
+    <div className="absolute w-full h-full top-0 left-0 flex justify-center items-center z-10">
 
     <div className="  animate-slide-in bg-gray-900 rounded-xl shadow-xl p-4"
     style={{

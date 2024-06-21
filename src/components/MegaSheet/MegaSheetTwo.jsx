@@ -1,8 +1,12 @@
 import { Button, Form, InputNumber, Col, Row, Select } from 'antd';
 import { useNavigate } from 'react-router-dom';
-
+import { useEffect } from 'react';
+import Auth from '../../Auth';
 const MegaSheetTwo = () => {
   const navigate = useNavigate();
+  useEffect(() => {
+    if(!Auth())navigate("/")
+  },[])
   return (
     <div>
       <h1 style={{ textAlign: 'center', marginTop: 10 }}>Mega sheet entry part - II</h1>
