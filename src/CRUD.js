@@ -213,7 +213,7 @@ async function addRollList(batchName,roll){
       const batchId = Object.keys(snapshot.val())[0];
       
       let rollList= snapshot.val()[batchId].rollList;
-      rollList.push(roll)
+      rollList.push({"rollNo":roll,isGroup:false})
       setRollList(batchName,rollList)
    } else {
       console.log("No batch found with that name");
