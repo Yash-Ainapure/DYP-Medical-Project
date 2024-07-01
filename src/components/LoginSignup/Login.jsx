@@ -61,7 +61,7 @@ function Login() {
     signInWithEmailAndPassword(auth, text.username, text.password)
       .then(() => {
         const current = new Date();
-        const future = new Date(current.getTime() + 30 * 60000);
+        const future = new Date(current.getTime() + 45 * 60000);
         localStorage.setItem("dypmeds", future.getTime());
         localStorage.setItem("dypuser", text.username)
 
