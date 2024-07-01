@@ -13,7 +13,7 @@ function Login() {
   const navigate = useNavigate();
   const [failedLogin, setfailedLogin] = useState(false);
   const [alertText, setAlertText] = useState("");
-
+  useEffect(()=>{document.title="Login Into DYP SIMAN"})
   const handleText = (e) => {
     e.preventDefault();
     setText({

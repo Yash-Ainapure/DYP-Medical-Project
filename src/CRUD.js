@@ -220,4 +220,4 @@ async function addRollList(batchName,roll){
       return [];
    }
 }
-export { setBatchData, getBatchesData, addnewStudent, fetchBatchNames, fetchStudentsByBatch, editStudent, deleteStudent, processData }
+export { setBatchData,setRollList, getBatchesData, addnewStudent, fetchBatchNames, fetchStudentsByBatch, editStudent, deleteStudent, processData }

@@ -4,36 +4,39 @@ import Auth from "../../Auth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWarning } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import { createGroup, updateGroupedRollList } from "../../CRUD2";
 const WorkshopGroupCreation = () => {
   const [workshopName, setWorkshopName] = useState("");
   const [workshopDate, setWorkshopDate] = useState("");
   const [totalParticipants, setTotalParticipants] = useState(0);
-  const [totalBatches, setTotalBatches] = useState("");
   const [batchArray, setBatchArray] = useState([]);
   const [selectedBatches, setSelectedBatches] = useState([]);
   const [batchLimits, setBatchLimits] = useState({});
   const [students, setStudents] = useState([]);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [showTable, setShowTable] = useState(false);
-  const [alert,showAlert]=useState(false);
+  const [alert, showAlert] = useState(false);
   const [checkedBatches, setCheckedBatches] = useState([]);
-  const [alertText, setAlertText]=useState("")
+  const [alertText, setAlertText] = useState("");
   const navigate = useNavigate();
   useEffect(() => {
     if (!Auth()) navigate("/");
   }, []);
-  useEffect(()=>{
-    if(alert){
-      setTimeout(()=>showAlert(false),2000)
+  useEffect(() => {
+    document.title = "Workshop Group Creation";
+  });
+  useEffect(() => {
+    if (alert) {
+      setTimeout(() => showAlert(false), 2000);
     }
-  },[alert])
+  }, [alert]);
   useEffect(() => {
     const fetchBatches = async () => {
       const batches = await getBatchesData();
       if (batches) {
         setBatchArray(batches);
         setCheckedBatches(batches.map(() => false));
-        setSelectedBatches(batches.map(()=>0))
+        setSelectedBatches(batches.map(() => 0));
       }
     };
     fetchBatches();
@@ -62,50 +65,112 @@ const WorkshopGroupCreation = () => {
 
   const onCreateGroup = async (e) => {
     e.preventDefault();
-    await fetchStudents();
-    const total=selectedBatches.reduce((acc,cur)=>acc+cur)
-    if(Number(total)>Number(totalParticipants)){
-      showAlert(true)
-      setAlertText("Invalid participants, Please check all fields sum")
+    // await fetchStudents();
+    const total = selectedBatches.reduce((acc, cur) => acc + cur);
+    if (Number(total) > Number(totalParticipants)) {
+      showAlert(true);
+      setAlertText("Invalid participants, Please check all student count");
+      return;
+    } else if (Number(total) == 0) {
+      showAlert(true);
+      setAlertText("Cannot accept zero particpants.");
+      return;
+    } else if (Number(total) < Number(totalParticipants)) {
+      showAlert(true);
+      setAlertText("Invalid participants, Pleas select more student count");
       return;
     }
-    else if(Number(total)==0){
-      showAlert(true)
-      setAlertText("Cannot accept zero particpants.")
-      return;
+
+    //filtering lvl 1 filtering only checked batches
+    let batchesToCheck = [];
+    let batchesLimits = [];
+    checkedBatches.filter((ele, index) => {
+      if (ele) {
+        batchesToCheck.push(batchArray[index]);
+        batchesLimits.push(selectedBatches[index]);
+      }
+      return ele;
+    });
+
+    // filtering lvl 2 filtering studentf that belong to no group
+    let ungroupedRollNos = [];
+    let batchWiseRollList=[];
+    let tmpRollList=[];
+    batchesToCheck.forEach((ele, index) => {
+      let c = 0;
+      for (let obj of ele.rollList) {
+        if (!obj.inGroup) {
+          if (c < batchesLimits[index]) {
+            ungroupedRollNos.push(obj.rollNo);
+            tmpRollList[index]={rollNo:obj.rollNo};
+          } else {
+            batchWiseRollList.push({batchName:ele.batchName,rollList:tmpRollList});
+            break;
+          }
+          c++;
+        }
+      }
+    });
+
+    //filtering lvl 3 (removing duplicate elements)
+    ungroupedRollNos.filter(
+      (ele, index) => index === ungroupedRollNos.indexOf(ele)
+    );
+
+    //structuring datat for group creation
+    const groupData={
+      rollList:ungroupedRollNos,
+      groupName:workshopName,
+      dateCreated:workshopDate,
+      totalParticipants:totalParticipants
     }
-    if (students.length >= totalParticipants) {
-      const group = students.slice(0, totalParticipants);
-      console.log("Created Group:", group);
-    } else {
-      console.error(
-        "Not enough students in selected batches to meet the required number of participants."
-      );
+    // console.log(ungroupedRollNos,"\t",batchesLimits,"\n",batchesToCheck)
+    // if(true)return;
+    try{
+      const stat1=await updateGroupedRollList(batchWiseRollList)
+      
+      const stat2=await createGroup(groupData)
+      if(!stat1 || !stat2){
+        showAlert(true)
+        setAlertText("something went wrong while creating group")
+
+      }else{
+        showAlert(true)
+        setAlertText("success")
+
+      }
+    }catch(e){
+      console.log(e)
     }
+    // if (students.length >= totalParticipants) {
+    //   const group = students.slice(0, totalParticipants);
+    //   console.log("Created Group:", group);
+    // } else {
+    //   console.error(
+    //     "Not enough students in selected batches to meet the required number of participants."
+    //   );
+    // }
   };
 
-  const handleStudentCount = (event, index) => {
-    let value = (event.target.value).trim();
-    if(event.target.value===""){
-      value=0;
+  const handleStudentCount = (event, index, availableCount) => {
+    let value = event.target.value.trim();
+    if (event.target.value === "") {
+      value = 0;
     }
-    const total=selectedBatches.reduce((acc, cur)=>acc+cur,0)
+    const total = selectedBatches.reduce((acc, cur) => acc + cur, 0);
     let newSelectedBatches = [...selectedBatches];
     newSelectedBatches[index] = Number(value);
     setSelectedBatches(newSelectedBatches);
-    if((Number(total)>Number(totalParticipants) || Number(value)>Number(totalParticipants))){
+    if (
+      Number(total) > Number(totalParticipants) ||
+      Number(value) > Number(totalParticipants) ||
+      Number(value) > Number(availableCount)
+    ) {
       showAlert(true);
-      setAlertText("Student count exceeds total participants")      
+      setAlertText("Student count exceeds total participants");
       // console.log(value+"\t"+totalParticipants+"\t",((Number(total)>Number(totalParticipants))),"\t",newSelectedBatches,"\t",totalParticipants)
       return;
     }
-
-
-  };
-
-  const handleBatchLimitChange = (event, batch) => {
-    const value = event.target.value;
-    setBatchLimits({ ...batchLimits, [batch]: parseInt(value, 10) });
   };
 
   useEffect(() => {
@@ -132,10 +197,12 @@ const WorkshopGroupCreation = () => {
   return (
     <div className="p-4 bg-white shadow-md rounded-lg">
       <h3 className="text-xl font-semibold mb-4">Workshop Group Creation</h3>
-      {alert && <div className="animate-slide-in absolute top-10  md:top-20 flex items-center justify-center gap-4 bg-red-500 text-white p-2 rounded-lg">
+      {alert && (
+        <div className="animate-slide-in absolute top-10  md:top-20 flex items-center justify-center gap-4 bg-red-500 text-white p-2 rounded-lg">
           <FontAwesomeIcon icon={faWarning} />
           {alertText}
-        </div>}
+        </div>
+      )}
       <form onSubmit={onCreateGroup}>
         <div className="space-y-4">
           <div className="flex flex-col md:flex-row md:space-x-4">
@@ -179,64 +246,86 @@ const WorkshopGroupCreation = () => {
               />
             </div>
           </div>
-          <hr/>
-          <div className="text-3xl font-semibold">
-            Available Batches List
-          </div>
+          <hr />
+          <div className="text-3xl font-semibold">Available Batches List</div>
           {true && (
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg h-[50vh] overflow-scroll">
               <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
                 <thead className="text-xs text-gray-700 uppercase bg-blue-300 ">
                   <tr>
-                    <th scope="col" className="px-6 py-3">
-                      Serial No.
+                    <th scope="col" className="px-5 py-3">
+                      Select Batch
                     </th>
-                    <th scope="col" className="px-6 py-3">
+                    <th scope="col" className="px-5 py-3">
                       Batch Name
                     </th>
-                    <th scope="col" className="px-6 py-3">
+                    <th scope="col" className="px-5 py-3">
                       Level
                     </th>
-                    <th scope="col" className="px-6 py-3">
+                    <th scope="col" className="px-5 py-3">
                       Specialty
                     </th>
-                    <th scope="col" className="px-6 py-3">
+                    <th scope="col" className="px-5 py-3">
                       Year
                     </th>
-                    <th scope="col" className="px-6 py-3">
+                    <th scope="col" className="px-5 py-3">
                       Stu. Count
                     </th>
-                    <th scope="col" className="px-6 py-3">
+                    <th scope="col" className="px-5 py-3">
+                      Ungrouped Stu. Count
+                    </th>
+                    <th scope="col" className="px-5 py-3">
                       Stu. to pick
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   {batchArray.map((batch, index) => {
-                    return <tr key={index} className="bg-white border-b dark:bg-blue-100  hover:bg-blue-200 text-black">
-                    <th
-                      scope="row"
-                      className="px-6 py-4 font-medium text-black whitespace-nowrap "
-                    >
-                      <input type="checkbox" className="h-[20px] w-[20px] cursor-pointer" checked={checkedBatches[index]} onChange={()=>{
-                        
-                        const newCheckedBatches=[...checkedBatches]
-                        newCheckedBatches[index]=!newCheckedBatches[index]
-                        const newSelectedBatches=[...selectedBatches]
-                        newSelectedBatches[index]=0;
-                        setSelectedBatches(newSelectedBatches)
-                        setCheckedBatches(newCheckedBatches)
-                      }}/>
-                    </th>
-                    <td className="px-6 py-4">{batch.batchName}</td>
-                    <td className="px-6 py-4">{batch.level}</td>
-                    <td className="px-6 py-4">{batch.speciality}</td>
-                    <td className="px-6 py-4">{batch.year}</td>
-                    <td className="px-6 py-4">{batch.rollList.length}</td>
-                    <td className="px-6 py-4 ">
-                      <input type="number" value={selectedBatches[index]} onChange={(e)=>handleStudentCount(e,index)} className="p-2"  disabled={!checkedBatches[index]}/>
-                    </td>
-                  </tr>
+                    const RollList = batch.rollList;
+                    const unGroupedStu = RollList.filter((obj) => !obj.inGroup);
+                    return (
+                      <tr
+                        key={index}
+                        className="bg-white border-b dark:bg-blue-100  hover:bg-blue-200 text-black"
+                      >
+                        <th
+                          scope="row"
+                          className="px-6 py-4 font-medium text-black whitespace-nowrap "
+                        >
+                          <input
+                            type="checkbox"
+                            className="h-[20px] w-[20px] cursor-pointer"
+                            checked={checkedBatches[index]}
+                            onChange={() => {
+                              const newCheckedBatches = [...checkedBatches];
+                              newCheckedBatches[index] =
+                                !newCheckedBatches[index];
+                              const newSelectedBatches = [...selectedBatches];
+                              newSelectedBatches[index] = 0;
+                              setSelectedBatches(newSelectedBatches);
+                              setCheckedBatches(newCheckedBatches);
+                            }}
+                          />
+                        </th>
+                        <td className="px-6 py-4">{batch.batchName}</td>
+                        <td className="px-6 py-4">{batch.level}</td>
+                        <td className="px-6 py-4">{batch.speciality}</td>
+                        <td className="px-6 py-4">{batch.year}</td>
+                        <td className="px-6 py-4">{batch.rollList.length}</td>
+                        <td className="px-6 py-4">{unGroupedStu.length}</td>
+                        <td className="px-6 py-4 ">
+                          <input
+                            type="number"
+                            value={selectedBatches[index]}
+                            onChange={(e) =>
+                              handleStudentCount(e, index, unGroupedStu.length)
+                            }
+                            className="p-2"
+                            disabled={!checkedBatches[index]}
+                          />
+                        </td>
+                      </tr>
+                    );
                   })}
                 </tbody>
               </table>
