@@ -11,6 +11,7 @@ import {
 
 import { database } from "./firebase";
 import { setRollList } from "./CRUD";
+import { LegendToggle } from "@mui/icons-material";
 async function addOneBatch(batchId, batchData) {
   try {
     const batchesRef = ref(database, `batches/${batchId}`);
@@ -103,8 +104,40 @@ async function createGroup(groupInfo) {
       .toLowerCase();
     const groupRef = ref(database, `grouplist/${groupid}`);
     await set(groupRef, groupInfo);
+    console.log("group created");
+    return true;
   } catch (error) {
     console.log(error);
+    return false;
+  }
+}
+
+async function groupExist(groupName) {
+  // try {
+  //   const groupRef = ref(database, "grouplist/" + groupName);
+  //   const snapshot = await get(groupRef);
+  //   if (snapshot.exists()) {
+  //     return true;
+  //   }
+  //   return false;
+  // } catch (e) {
+  //   console.log(e);
+  //   return false;
+  // }
+  const db = getDatabase();
+  try {
+    const duplicateCheck = query(
+      ref(db, "grouplist"),
+      orderByChild("groupName"),
+      equalTo(groupName)
+    );
+    const snapshot = await get(duplicateCheck);
+    if (snapshot.exists()) {
+      return true;
+    }
+    return false;
+  } catch (e) {
+    console.log(e);
     return false;
   }
 }
@@ -112,34 +145,64 @@ async function createGroup(groupInfo) {
 async function updateGroupedRollList(batchesList) {
   const db = getDatabase();
   try {
-    await batchesList.map(async (ele, index) => {
-      const batchQuery = query(
-        ref(db, "batches"),
-        orderByChild("batchName"),
-        equalTo(ele.batchName)
-      );
-      const snapshot = await get(batchQuery);
-      if (snapshot.exists()) {
-        const batchId = Object.keys(snapshot.val())[0];
+    console.log("updation started");
+    console.log(batchesList)
 
-        let rollList = snapshot.val()[batchId].rollList;
-        console.log("rolllist\t", rollList);
-        console.log("ele.rollList\t", ele.rollList);
-        console.log(batchesList);
-        rollList=rollList.map((rollObj, index) => {
-          ele.rollList.map((newRollObj, index) => {
-            if (rollObj.rollNo === newRollObj.rollNo) {
-              rollObj.inGroup = true;
+    const result=await Promise.all(
+      batchesList.map(async (ele, index) => {
+        try {
+          console.log(ele);
+          const batchQuery = query(
+            ref(db, "batches"),
+            orderByChild("batchName"),
+            equalTo(ele.batchName)
+          );
+          let snapshot;
+          try {
+            snapshot = await get(batchQuery);
+          } catch (er1) {
+            console.log(er1);
+          }
+          console.log("snapshot", snapshot.val());
+          if (snapshot.exists()) {
+            const batchId = Object.keys(snapshot.val())[0];
+
+            let rollList = snapshot.val()[batchId].rollList;
+            console.log(batchesList);
+            rollList = rollList.map((rollObj, index) => {
+              ele.rollList.map((newRollObj, index) => {
+                if (rollObj.rollNo === newRollObj.rollNo) {
+                  rollObj.inGroup = true;
+                }
+              });
+              return rollObj;
+            });
+
+            let stat;
+            try {
+              stat = await setRollList(ele.batchName, rollList);
+              console.log("second async opr passed");
+            } catch (er1) {
+              console.log(er1);
             }
-          });
-        });
-         await setRollList(ele.batchName, rollList);
-        return true;
-      } else {
-        console.log("No batch found with that name");
-        return false;
-      }
-    });
+            console.log("everything done, no exception", stat);
+            return true;
+          } else {
+            console.log("No batch found with that name");
+            return false;
+          }
+        } catch (bigErr) {
+          console.log(bigErr);
+        }
+      })
+    )
+
+    if(result.includes(false)){
+      return false;
+    }
+    console.log(result)
+    return result[0]
+
   } catch (error) {
     console.log(error);
   }
@@ -156,6 +219,7 @@ export {
   updateStudent,
   addRollList,
   removeRollList,
+  groupExist,
   updateGroupedRollList,
-  createGroup
+  createGroup,
 };

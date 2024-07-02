@@ -199,8 +199,10 @@ async function setRollList(batchName, rollList){
       const batchRef = ref(db, `batches/${batchId}`);
       await update(batchRef, { rollList });
       console.log("Roll list updated successfully");
+      return true
    } else {
       console.log("No batch found with that name");
+      return false;
    }
 }
 

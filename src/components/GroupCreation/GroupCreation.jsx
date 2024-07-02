@@ -4,7 +4,7 @@ import Auth from "../../Auth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWarning } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
-import { createGroup, updateGroupedRollList } from "../../CRUD2";
+import { createGroup, groupExist, updateGroupedRollList } from "../../CRUD2";
 const WorkshopGroupCreation = () => {
   const [workshopName, setWorkshopName] = useState("");
   const [workshopDate, setWorkshopDate] = useState("");
@@ -80,7 +80,13 @@ const WorkshopGroupCreation = () => {
       setAlertText("Invalid participants, Pleas select more student count");
       return;
     }
-
+    const exists =await groupExist(workshopName);
+    if (exists) {
+      showAlert(true);
+      setAlertText("The name '" + workshopName+ " is already exists") ;
+      return;
+    }
+    console.log("dman, that some uniqueueueueu name") 
     //filtering lvl 1 filtering only checked batches
     let batchesToCheck = [];
     let batchesLimits = [];
@@ -94,17 +100,21 @@ const WorkshopGroupCreation = () => {
 
     // filtering lvl 2 filtering studentf that belong to no group
     let ungroupedRollNos = [];
-    let batchWiseRollList=[];
-    let tmpRollList=[];
+    let batchWiseRollList = [];
+    let tmpRollList = [];
     batchesToCheck.forEach((ele, index) => {
       let c = 0;
       for (let obj of ele.rollList) {
         if (!obj.inGroup) {
           if (c < batchesLimits[index]) {
             ungroupedRollNos.push(obj.rollNo);
-            tmpRollList[index]={rollNo:obj.rollNo};
+            tmpRollList[c] = { rollNo: obj.rollNo };
           } else {
-            batchWiseRollList.push({batchName:ele.batchName,rollList:tmpRollList});
+            batchWiseRollList.push({
+              batchName: ele.batchName,
+              rollList: tmpRollList,
+            });
+            tmpRollList = [];
             break;
           }
           c++;
@@ -118,38 +128,40 @@ const WorkshopGroupCreation = () => {
     );
 
     //structuring datat for group creation
-    const groupData={
-      rollList:ungroupedRollNos,
-      groupName:workshopName,
-      dateCreated:workshopDate,
-      totalParticipants:totalParticipants
-    }
+    const groupData = {
+      rollList: ungroupedRollNos,
+      groupName: workshopName,
+      dateCreated: workshopDate,
+      totalParticipants: totalParticipants,
+    };
     // console.log(ungroupedRollNos,"\t",batchesLimits,"\n",batchesToCheck)
     // if(true)return;
-    try{
-      const stat1=await updateGroupedRollList(batchWiseRollList)
-      
-      const stat2=await createGroup(groupData)
-      if(!stat1 || !stat2){
-        showAlert(true)
-        setAlertText("something went wrong while creating group")
+    try {
+      const stat1 = await updateGroupedRollList(batchWiseRollList);
 
-      }else{
-        showAlert(true)
-        setAlertText("success")
+      const stat2=await createGroup(groupData)
+      // const stat2 = true;
+
+      // const stat1=true,stat2=true;
+      if (!stat1 || !stat2) {
+        showAlert(true);
+        setAlertText("something went wrong while creating group");
+        console.log(stat1, stat2);
+      } else {
+        showAlert(true);
+        setAlertText("success");
+        console.log("everything is done, u may rest now boi")
 
       }
-    }catch(e){
-      console.log(e)
+      const batches = await getBatchesData();
+        if (batches) {
+          setBatchArray(batches);
+          setCheckedBatches(batches.map(() => false));
+          setSelectedBatches(batches.map(() => 0));
+        }
+    } catch (e) {
+      console.log(e);
     }
-    // if (students.length >= totalParticipants) {
-    //   const group = students.slice(0, totalParticipants);
-    //   console.log("Created Group:", group);
-    // } else {
-    //   console.error(
-    //     "Not enough students in selected batches to meet the required number of participants."
-    //   );
-    // }
   };
 
   const handleStudentCount = (event, index, availableCount) => {
@@ -180,7 +192,6 @@ const WorkshopGroupCreation = () => {
       totalParticipants.length > 0
     ) {
       setShowTable(true);
-      console.log(workshopName, workshopDate, totalParticipants);
     } else {
       setShowTable(false);
     }
