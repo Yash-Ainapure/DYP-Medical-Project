@@ -2,86 +2,74 @@ import { Button, Form, InputNumber, Input, Select, DatePicker, Col, Row } from '
 import { useNavigate } from "react-router-dom";
 import Auth from '../../Auth';
 import { useEffect } from 'react';
-const MegaSheetOne = () => {
 
-  const navigate=useNavigate();
+const MegaSheetOne = () => {
+  const navigate = useNavigate();
+
   useEffect(() => {
-    if(!Auth())navigate("/")
-  },[])
+    if (!Auth()) navigate("/");
+  }, [navigate]);
+
   return (
-    <div className='container page'>
-      <h1 style={{ textAlign: 'center' }}>Mega sheet entry part - I</h1>
-      <Row className='container' style={{ marginTop: 8 }}>
-        <Col span={8} className='mx-19' style={{ marginLeft: 200 }}>
-          <Form.Item label="Title of workshop :">
-            <Input placeholder=" name " style={{ backgroundColor: '#CAF0F8' }} />
-          </Form.Item>
-          <Form.Item label="Nature of workshop">
-            <Select>
-              <Select.Option value="Anesthesiology">Student training</Select.Option>
-              <Select.Option value="Dermatology">FDP</Select.Option>
-              <Select.Option value="G. Medicine">Consultancy-paid/</Select.Option>
-              <Select.Option value="G. Surgery"> Unpaid</Select.Option>
-            </Select>
-          </Form.Item>
-          <Form.Item label="Date :">
-            <DatePicker />
-          </Form.Item>
-          <Form.Item label="Reaport Number :">
-            <InputNumber style={{ backgroundColor: '#CAF0F8' }} />
-          </Form.Item>
-          <Form.Item label="Name Of Trainer :">
-            <Input label="name" style={{ backgroundColor: '#CAF0F8' }} />
-          </Form.Item>
-          <Form.Item label="Beneficiaries : ">
-            <Input label="Name/Institution/Category" style={{ backgroundColor: '#CAF0F8' }} />
-          </Form.Item>
+    <div className='container mx-auto mt-10 px-20 pb-10'>
+      <h1 className='text-2xl font-bold text-center mb-8'>Mega sheet entry part - I</h1>
+      <Row gutter={16}>
+        <Col span={12}>
+          <Form layout="vertical">
+            <Form.Item label="Title of workshop:">
+              <Input placeholder="Enter workshop title" />
+            </Form.Item>
+            <Form.Item label="Nature of workshop:">
+              <Select placeholder="Select nature">
+                <Select.Option value="Student training">Student training</Select.Option>
+                <Select.Option value="FDP">FDP</Select.Option>
+                <Select.Option value="Consultancy-paid">Consultancy-paid</Select.Option>
+                <Select.Option value="Unpaid">Unpaid</Select.Option>
+              </Select>
+            </Form.Item>
+            <Form.Item label="Date:">
+              <DatePicker style={{ width: '100%' }} />
+            </Form.Item>
+            <Form.Item label="Report Number:">
+              <InputNumber placeholder="Enter report number" style={{ width: '100%' }} />
+            </Form.Item>
+            <Form.Item label="Name Of Trainer:">
+              <Input placeholder="Enter trainer's name" />
+            </Form.Item>
+            <Form.Item label="Beneficiaries:">
+              <Input placeholder="Enter beneficiaries" />
+            </Form.Item>
+          </Form>
         </Col>
-        <Col span={8} className='mx-20 container' style={{ marginLeft: 20 }}>
-          <Form.Item label="Type of workshop :">
-            <Select>
-              <Select.Option value="Anesthesiology">Student training</Select.Option>
-              <Select.Option value="Dermatology">FDP</Select.Option>
-              <Select.Option value="G. Medicine">Consultancy-paid/</Select.Option>
-              <Select.Option value="G. Surgery"> Unpaid</Select.Option>
-            </Select>
-          </Form.Item>
-          <Form.Item label="Department:">
-            <Select>
-              <Select.Option value="Anesthesiology">Anesthesiology</Select.Option>
-              <Select.Option value="Dermatology">Dermatology</Select.Option>
-              <Select.Option value="G. Medicine">G. Medicine/</Select.Option>
-              <Select.Option value="G. Surgery"> G. Surgery</Select.Option>
-              <Select.Option value="Dermatology">	Obst & Gyn</Select.Option>
-              <Select.Option value="Dermatology">	Ophthalmology</Select.Option>
-              <Select.Option value="Dermatology">	Orthopedics</Select.Option>
-              <Select.Option value="Dermatology">	Pediatrics</Select.Option>
-              <Select.Option value="Dermatology">	Pathology</Select.Option>
-              <Select.Option value="Dermatology">	Psychiatry</Select.Option>
-              <Select.Option value="Dermatology">Radio-Diagnosis</Select.Option>
-              <Select.Option value="Dermatology">IP</Select.Option>
-              <Select.Option value="Dermatology">Physiotherapy</Select.Option>
-              <Select.Option value="Dermatology">Nursing</Select.Option>
-              <Select.Option value="Dermatology">E.N.T</Select.Option>
-              <Select.Option value="Dermatology">Forensic Medicine</Select.Option>
-              <Select.Option value="Dermatology">Emergency Medicine</Select.Option>
-              <Select.Option value="Dermatology">	Faculty Development Workshop</Select.Option>
-              <Select.Option value="Dermatology">Obs & Gyn/Radio-diagnosis</Select.Option>
-              <Select.Option value="Dermatology">Intern</Select.Option>
-            </Select>
-          </Form.Item>
-          <Form.Item label="Institution of trainer:">
-            <Select>
-              <Select.Option value="Anesthesiology">Internal</Select.Option>
-              <Select.Option value="Dermatology">External</Select.Option>
-            </Select>
-          </Form.Item>
+        <Col span={12}>
+          <Form layout="vertical">
+            <Form.Item label="Type of workshop:">
+              <Select placeholder="Select type">
+                <Select.Option value="Student training">Student training</Select.Option>
+                <Select.Option value="FDP">FDP</Select.Option>
+                <Select.Option value="Consultancy-paid">Consultancy-paid</Select.Option>
+                <Select.Option value="Unpaid">Unpaid</Select.Option>
+              </Select>
+            </Form.Item>
+            <Form.Item label="Department:">
+              <Select placeholder="Select department">
+                <Select.Option value="Anesthesiology">Anesthesiology</Select.Option>
+                <Select.Option value="Dermatology">Dermatology</Select.Option>
+                {/* Add other departments as needed */}
+              </Select>
+            </Form.Item>
+            <Form.Item label="Institution of trainer:">
+              <Select placeholder="Select institution">
+                <Select.Option value="Internal">Internal</Select.Option>
+                <Select.Option value="External">External</Select.Option>
+              </Select>
+            </Form.Item>
+          </Form>
         </Col>
       </Row>
-      <Button onClick={(e)=>{
-        e.preventDefault();
-        navigate("/dashboard/megasheet2")
-      }} style={{ marginBottom: 10, marginLeft: 850, backgroundColor: 'blue', color: 'white' }}>Next</Button>
+      <div className="flex justify-end mt-8">
+        <Button type="primary" onClick={() => navigate("/dashboard/megasheet2")}>Next</Button>
+      </div>
     </div>
   );
 };

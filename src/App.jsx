@@ -20,6 +20,11 @@ import DisplayStudentList from './components/StudentDbCreation/DisplayStudentLis
 import EditStudentInfo from './components/StudentDbCreation/EditStudentInfo';
 import "./App.css";
 import Event from "./components/Events";
+import Dashboard1 from './components/Dashboard1';
+import Workshop from './components/Workshop';
+import Batches from './components/Batches';
+import Megasheet from './components/Megasheet';
+import Outcomes from './components/Outcomes';
 
 function App() {
   const [showStudentList, setShowStudentList] = useState(false);
@@ -33,6 +38,7 @@ function App() {
   return (
     <div className="flex flex-col min-h-screen">
       <Router>
+        
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/registration" element={<Register />} />
@@ -70,11 +76,31 @@ function App() {
               path="workshopreport"
               element={<WorkshopReport />}
             />
+           
             <Route
-              path="event"
+              path="dashboard"
+              element={<Dashboard1 />}
+            />
+              <Route
+              path="batches"
+              element={<Batches />}
+            />
+              <Route
+              path="megasheet"
+              element={<Megasheet />}
+            />
+              <Route
+              path="outcomes"
+              element={<Outcomes />}
+            />
+              <Route
+              path="workshop"
+              element={<Workshop />}
+            />
+             <Route
+              path="events"
               element={<Event />}
             />
-
           </Route>
         </Routes>
         {showStudentList && (
@@ -83,7 +109,7 @@ function App() {
             onClose={() => setShowStudentList(false)}
           />
         )}
-        <Footer />
+     
       </Router>
     </div>
   );

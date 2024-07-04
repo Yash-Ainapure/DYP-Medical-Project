@@ -111,8 +111,10 @@ function StudentDBCreation2() {
   }
   const closeModal = () => setModal(false);
 
-  return (
+  return (     <div className=" tems-center m-4">
+          <h1 className="text-2xl text-center font-bold text-gray-800">Create Batches</h1>
     <div className="w-full h-full flex justify-center mt-5 md:mt-0 p-4 md:p-0 md:items-center">
+      
       {modal && (
         <Modal
           navigate={navigate}
@@ -234,6 +236,7 @@ function StudentDBCreation2() {
           </button>
         </div>
       </div>
+    </div>
     </div>
   );
 }

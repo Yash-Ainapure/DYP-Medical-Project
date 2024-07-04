@@ -206,7 +206,7 @@ const WorkshopGroupCreation = () => {
   };
 
   return (
-    <div className="p-4 bg-white shadow-md rounded-lg">
+    <div className="px-20 py-10 bg-white shadow-md rounded-lg">
       <h3 className="text-xl font-semibold mb-4">Workshop Group Creation</h3>
       {alert && (
         <div className="animate-slide-in absolute top-10  md:top-20 flex items-center justify-center gap-4 bg-red-500 text-white p-2 rounded-lg">
@@ -260,7 +260,7 @@ const WorkshopGroupCreation = () => {
           <hr />
           <div className="text-3xl font-semibold">Available Batches List</div>
           {true && (
-            <div className="relative overflow-x-auto shadow-md sm:rounded-lg h-[50vh] overflow-scroll">
+            <div className="relative overflow-x-auto shadow-md sm:rounded-lg h-[50vh] overflow-scroll-auto">
               <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
                 <thead className="text-xs text-gray-700 uppercase bg-blue-300 ">
                   <tr>
