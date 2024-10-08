@@ -49,8 +49,8 @@ const DisplayStudentList = ({ batchName, onClose }) => {
    }
 
    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-         <div className="bg-white p-8 rounded shadow-md w-full max-w-xl relative">
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 ">
+         <div className="bg-white p-8 rounded shadow-md w-full max-w-xl relative overflow-y-scroll h-[90%]">
             <button onClick={onClose} className="absolute top-0 right-0 mt-2 mr-2 text-gray-500 hover:text-gray-700 text-3xl">
                &times;
             </button>
